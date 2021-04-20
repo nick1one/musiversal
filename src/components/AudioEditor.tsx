@@ -1,6 +1,10 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
-import { Block } from "./Block";
+import { useAppSelector } from "../hooks";
+import { editorBlocksSelector } from "../store/editorSlice";
+import { RootState } from "../store/store";
+import { EditorBlock } from "../types";
+import { EditorBlockContainer } from "./EditorBlockContainer";
 import { ControlSection } from "./ControlSection";
 
 const StyledContainer = styled.div`
@@ -12,13 +16,17 @@ const StyledContainer = styled.div`
   border-radius: 8px;
 `;
 
-export const AudioEditor = (): ReactElement => (
-  <StyledContainer>
-    <ControlSection />
-    {Array(30)
-      .fill(null)
-      .map((value, i) => (
-        <Block key={i} />
+export const AudioEditor = (): ReactElement => {
+  const editorBlocks = useAppSelector((state: RootState) =>
+    editorBlocksSelector(state)
+  );
+
+  return (
+    <StyledContainer>
+      <ControlSection />
+      {editorBlocks.map((props: EditorBlock) => (
+        <EditorBlockContainer key={props.id} {...props} />
       ))}
-  </StyledContainer>
-);
+    </StyledContainer>
+  );
+};

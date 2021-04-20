@@ -1,24 +1,23 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
-import fs from "fs";
+import { SampleWithMetadata } from "./types";
+import { LOCALHOST_BASEURL, PORT_NUMBER, URL } from "./constants";
+import { getSampleList } from "./helpers";
 
 const app: Application = express();
 
-const port = 3001;
-const allowedOrigins = ["http://localhost:3000"];
-
 const options: cors.CorsOptions = {
-  origin: allowedOrigins,
+  origin: [LOCALHOST_BASEURL],
 };
 app.use(cors(options));
-app.get("/samples", (req: Request, res: Response) => {
-  const testFolder = "./data/samples";
-
-  fs.readdir(testFolder, (err, files) => {
-    res.json({ samples: files });
-  });
+app.get(URL.SAMPLES, async (req: Request, res: Response) => {
+  const samples: SampleWithMetadata[] = await getSampleList();
+  res.json({ samples });
+  // console.log(util.inspect(samples, { showHidden: false, depth: null }));
 });
 
-app.listen(port, function () {
-  console.log(`App is listening on port ${port} !`);
+app.post(URL.SAVE, async (req: Request, res: Response) => {});
+
+app.listen(PORT_NUMBER, function () {
+  console.log(`App is listening on port ${PORT_NUMBER} !`);
 });

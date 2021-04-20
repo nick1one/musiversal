@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
+import { SAMPLES_TITLE } from "../constants";
 import { SampleListContainer } from "./SampleListContainer";
 
 const StyledSidebar = styled.aside`
@@ -20,7 +21,7 @@ const StyledSamplesTitle = styled.h2`
 
 export const Sidebar = (): ReactElement => (
   <StyledSidebar>
-    <StyledSamplesTitle>Samples</StyledSamplesTitle>
+    <StyledSamplesTitle>{SAMPLES_TITLE}</StyledSamplesTitle>
     <SampleListContainer />
   </StyledSidebar>
 );

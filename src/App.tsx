@@ -1,8 +1,10 @@
 import React from "react";
+import { Provider } from "react-redux";
 import styled from "styled-components";
 import { Header } from "./components/Header";
 import { Main } from "./components/Main";
 import { Sidebar } from "./components/Sidebar";
+import store from "./store/store";
 
 const StyledContainer = styled.div`
   display: grid;
@@ -20,11 +22,13 @@ const StyledContainer = styled.div`
 
 function App() {
   return (
-    <StyledContainer className="App">
-      <Header />
-      <Sidebar />
-      <Main />
-    </StyledContainer>
+    <Provider store={store}>
+      <StyledContainer className="App">
+        <Header />
+        <Sidebar />
+        <Main />
+      </StyledContainer>
+    </Provider>
   );
 }
 

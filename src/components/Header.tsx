@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../assets/logo.svg";
 import styled from "styled-components";
+import { HEADER_TEXT } from "../constants";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -22,6 +23,6 @@ const StyledLogo = styled.img`
 export const Header = () => (
   <StyledHeader>
     <StyledLogo src={logo} />
-    My Studio
+    {HEADER_TEXT}
   </StyledHeader>
 );

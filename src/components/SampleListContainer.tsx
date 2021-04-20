@@ -1,8 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { Sample } from "./Sample";
+import Sample from "./Sample";
 import axios from "axios";
-
-const getName = (fullName: string): string => fullName.split(".")[0];
 
 export const SampleListContainer = (): ReactElement => {
   const [sampleList, saveSampleList] = useState([]);
@@ -13,7 +11,7 @@ export const SampleListContainer = (): ReactElement => {
         const {
           data: { samples },
         } = response;
-        saveSampleList(samples.map((fullName: string) => getName(fullName)));
+        saveSampleList(samples);
       } catch (error) {
         console.error(error);
       }
@@ -23,8 +21,8 @@ export const SampleListContainer = (): ReactElement => {
 
   return (
     <>
-      {sampleList.map((value, index) => (
-        <Sample key={index} sampleName={value} />
+      {sampleList.map(({ id, name, duration }) => (
+        <Sample key={id} sampleName={name} duration={duration} />
       ))}
     </>
   );

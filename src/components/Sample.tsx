@@ -1,10 +1,8 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
+import { SampleData } from "../types";
+import { draggableSampleHoc } from "./DraggableSampleHoc";
 import { PlayButton } from "./PlayButton";
-
-interface SampleProps {
-  sampleName: string;
-}
 
 const StyledSample = styled.div`
   display: flex;
@@ -20,9 +18,13 @@ const StyledSample = styled.div`
   user-select: none;
 `;
 
-export const Sample = ({ sampleName }: SampleProps): ReactElement => (
-  <StyledSample draggable>
+export type SampleProps = SampleData;
+
+const Sample = ({ sampleName, ...props }: SampleProps): ReactElement => (
+  <StyledSample {...props}>
     <PlayButton />
     {sampleName}
   </StyledSample>
 );
+
+export default draggableSampleHoc(Sample);
