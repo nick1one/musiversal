@@ -5,13 +5,26 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import {
+  DEFAULT_TRACK_NAME,
   EDITOR_BLOCKS_NUM,
   EDITOR_FEATURE_NAME,
   SAMPLE_DUMMY_DATA,
 } from "../constants";
 import { countOverlappedIds, getBlockSize, getRandomColor } from "../helpers";
-import { EditorBlock, SampleData } from "../types";
+import { SampleListItem } from "./sampleListSlice";
 import { RootState } from "./store";
+
+export interface SampleData {
+  name: string;
+  duration: number;
+  color?: string;
+}
+
+export interface EditorBlock {
+  id: string;
+  size: number;
+  sample: SampleData;
+}
 
 interface DndData {
   overlappedIds: string[];
@@ -21,6 +34,7 @@ interface DndData {
 interface EditorState {
   editorBlocks: EditorBlock[];
   dndData: DndData;
+  currentTrackName: string;
 }
 
 const initialState: EditorState = {
@@ -33,13 +47,14 @@ const initialState: EditorState = {
     overlappedIds: [],
     sampleToInsert: null,
   },
+  currentTrackName: DEFAULT_TRACK_NAME,
 };
 
 export const editorSlice = createSlice({
   name: EDITOR_FEATURE_NAME,
   initialState,
   reducers: {
-    saveDndData: (state, { payload }: PayloadAction<SampleData>) => {
+    saveDndData: (state, { payload }: PayloadAction<SampleListItem>) => {
       state.dndData.sampleToInsert = payload;
     },
     insertSample: (state) => {
@@ -75,6 +90,7 @@ export const editorSlice = createSlice({
         blockIds: state.editorBlocks.map(({ id }) => id),
       });
     },
+    // saveCurrentTrack: (state, action) => {},
   },
 });
 
@@ -88,7 +104,12 @@ export const editorBlocksSelector = createSelector(
   ({ editorBlocks }) => editorBlocks
 );
 
-export const getDndSample = createSelector(
+export const currentTrackSelector = createSelector(
+  selectSelf,
+  ({ currentTrackName }) => currentTrackName
+);
+
+export const dndSampleSelector = createSelector(
   selectDndData,
   ({ sampleToInsert }) => sampleToInsert
 );

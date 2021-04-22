@@ -1,19 +1,33 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
-import { SampleWithMetadata } from "./types";
-import { LOCALHOST_BASEURL, PORT_NUMBER, URL } from "./constants";
-import { getSampleList } from "./helpers";
+import path from "path";
+import { CONFIG, PORT_NUMBER, UI_APP_URL, URL } from "./constants";
+import { scanFolder } from "./helpers";
+import { SoundfileWithMetadata, SoundType } from "./types";
 
 const app: Application = express();
 
 const options: cors.CorsOptions = {
-  origin: [LOCALHOST_BASEURL],
+  origin: [UI_APP_URL],
 };
 app.use(cors(options));
-app.get(URL.SAMPLES, async (req: Request, res: Response) => {
-  const samples: SampleWithMetadata[] = await getSampleList();
+app.use(
+  CONFIG.SAMPLE.SERVE_URL,
+  express.static(path.resolve(CONFIG.SAMPLE.FOLDER))
+);
+app.use(
+  CONFIG.TRACK.SERVE_URL,
+  express.static(path.resolve(CONFIG.TRACK.FOLDER))
+);
+
+app.get(CONFIG.SAMPLE.FETCH_URL, async (req: Request, res: Response) => {
+  const samples: SoundfileWithMetadata[] = await scanFolder(SoundType.SAMPLE);
   res.json({ samples });
   // console.log(util.inspect(samples, { showHidden: false, depth: null }));
+});
+
+app.get(CONFIG.TRACK.FETCH_URL, async (req: Request, res: Response) => {
+  res.json({ tracks: await scanFolder(SoundType.TRACK) });
 });
 
 app.post(URL.SAVE, async (req: Request, res: Response) => {});

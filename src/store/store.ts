@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { EDITOR_FEATURE_NAME } from "../constants";
+import { EDITOR_FEATURE_NAME, SAMPLE_LIST_FEATURE_NAME } from "../constants";
 import { editorSlice } from "./editorSlice";
+import { sampleListSlice } from "./sampleListSlice";
 
 const store = configureStore({
   reducer: {
     [EDITOR_FEATURE_NAME]: editorSlice.reducer,
+    [SAMPLE_LIST_FEATURE_NAME]: sampleListSlice.reducer,
   },
 });
 

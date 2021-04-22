@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
-import { EditorBlock } from "../types";
+import { EditorBlock } from "../store/editorSlice";
 import { StyledEditorBlock } from "./EmptyBlock";
 import ReactTooltip from "react-tooltip";
 
@@ -18,6 +18,7 @@ const StyledSample = styled(StyledEditorBlock)`
   font-style: normal;
   font-weight: 500;
   line-height: 15px;
+  user-select: none;
 
   span {
     position: absolute;
@@ -32,8 +33,8 @@ const StyledSample = styled(StyledEditorBlock)`
 `;
 
 export const SampleBlock = (props: EditorBlock): ReactElement => (
-  <StyledSample {...props} data-tip={props.sample?.sampleName}>
-    <span>{props.sample?.sampleName}</span>
+  <StyledSample {...props} data-tip={props.sample?.name}>
+    <span>{props.sample?.name}</span>
     <ReactTooltip />
   </StyledSample>
 );

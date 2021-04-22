@@ -1,11 +1,10 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../hooks";
-import { editorBlocksSelector } from "../store/editorSlice";
+import { EditorBlock, editorBlocksSelector } from "../store/editorSlice";
 import { RootState } from "../store/store";
-import { EditorBlock } from "../types";
 import { EditorBlockContainer } from "./EditorBlockContainer";
-import { ControlSection } from "./ControlSection";
+import { TrackControlSection } from "./TrackControlSection";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -23,7 +22,7 @@ export const AudioEditor = (): ReactElement => {
 
   return (
     <StyledContainer>
-      <ControlSection />
+      <TrackControlSection />
       {editorBlocks.map((props: EditorBlock) => (
         <EditorBlockContainer key={props.id} {...props} />
       ))}

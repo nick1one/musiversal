@@ -18,6 +18,7 @@ const StyledHeader = styled.header`
 const StyledLogo = styled.img`
   width: 36px;
   padding-right: 16px;
+  user-select: none;
 `;
 
 export const Header = () => (

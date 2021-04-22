@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
-import { SampleData } from "../types";
+import { SampleListItem } from "../store/sampleListSlice";
+import { PlayButtonContainer } from "./PlayButtonContainer";
 import { draggableSampleHoc } from "./DraggableSampleHoc";
-import { PlayButton } from "./PlayButton";
 
 const StyledSample = styled.div`
   display: flex;
@@ -16,15 +16,18 @@ const StyledSample = styled.div`
   cursor: pointer;
   letter-spacing: -0.03em;
   user-select: none;
+  &:hover {
+    background-color: #f7f0ee;
+  }
 `;
 
-export type SampleProps = SampleData;
-
-const Sample = ({ sampleName, ...props }: SampleProps): ReactElement => (
-  <StyledSample {...props}>
-    <PlayButton />
-    {sampleName}
-  </StyledSample>
-);
+const Sample = ({ path, name, duration, id }: SampleListItem): ReactElement => {
+  return (
+    <StyledSample>
+      <PlayButtonContainer {...{ path, duration, id }} />
+      {name}
+    </StyledSample>
+  );
+};
 
 export default draggableSampleHoc(Sample);

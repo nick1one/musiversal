@@ -3,24 +3,24 @@ import * as mm from "music-metadata";
 import { nanoid } from "nanoid";
 import path from "path";
 import { promisify } from "util";
-import { SAMPLE_FOLDER } from "./constants";
-import { SampleWithMetadata } from "./types";
+import { API_URL, CONFIG, PORT_NUMBER } from "./constants";
+import { SoundfileWithMetadata, SoundType } from "./types";
 
 const readdir = promisify(fs.readdir);
-
 const getName = (fullName: string): string => fullName.split(".")[0];
 
 const getMetaData = (
-  samples: string[],
-  sampleFolder: string
-): Promise<SampleWithMetadata[]> =>
+  soundFiles: string[],
+  folder: string,
+  target: SoundType
+): Promise<SoundfileWithMetadata[]> =>
   Promise.all(
-    samples.map(async (filename) => {
-      const filePath = path.join(sampleFolder, filename);
+    soundFiles.map(async (filename) => {
+      const filePath = path.join(folder, filename);
       const outputData = {
         id: nanoid(),
         name: getName(filename),
-        path: filePath,
+        path: `${API_URL}:${PORT_NUMBER}${CONFIG[target].SERVE_URL}/${filename}`,
       };
       try {
         const {
@@ -37,7 +37,7 @@ const getMetaData = (
     })
   );
 
-export const getSampleList = async () => {
-  const sampleFolder = path.resolve(SAMPLE_FOLDER);
-  return await getMetaData(await readdir(sampleFolder), sampleFolder);
+export const scanFolder = async (target: SoundType) => {
+  const targetFolder = path.resolve(`./${CONFIG[target].FOLDER}`);
+  return await getMetaData(await readdir(targetFolder), targetFolder, target);
 };

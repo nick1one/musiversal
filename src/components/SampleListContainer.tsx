@@ -1,28 +1,32 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import {
+  fetchAllSamples,
+  isLoadingSelector,
+  sampleListSelector,
+} from "../store/sampleListSlice";
+import { RootState } from "../store/store";
 import Sample from "./Sample";
-import axios from "axios";
+import { Spinner } from "./Spinner";
 
 export const SampleListContainer = (): ReactElement => {
-  const [sampleList, saveSampleList] = useState([]);
-  useEffect(() => {
-    async function getSampleList() {
-      try {
-        const response = await axios.get("http://localhost:3001/samples");
-        const {
-          data: { samples },
-        } = response;
-        saveSampleList(samples);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getSampleList();
-  }, []);
+  const dispatch = useAppDispatch();
 
+  const sampleList = useAppSelector((state: RootState) =>
+    sampleListSelector(state)
+  );
+  const isLoading = useAppSelector((state: RootState) =>
+    isLoadingSelector(state)
+  );
+
+  useEffect(() => {
+    dispatch(fetchAllSamples());
+  }, []);
   return (
     <>
-      {sampleList.map(({ id, name, duration }) => (
-        <Sample key={id} sampleName={name} duration={duration} />
+      {isLoading && <Spinner />}
+      {sampleList.map((props) => (
+        <Sample key={props.id} {...props} />
       ))}
     </>
   );

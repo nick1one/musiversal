@@ -1,4 +1,6 @@
+import axios from "axios";
 import {
+  API,
   EDITOR_BLOCKS_NUM,
   EDITOR_LENGTH_SEC,
   EDITOR_SAMPLE_COLORS,
@@ -34,3 +36,18 @@ export const countOverlappedIds = ({
 
 export const getRandomColor = () =>
   EDITOR_SAMPLE_COLORS[Math.ceil(Math.random() * 10) - 1];
+
+export const fetchSampleList = async () => {
+  try {
+    const {
+      data: { samples },
+    } = await axios.get(API.BASE + API.GET_SAMPLES);
+    return samples;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = () => {};
