@@ -2,11 +2,11 @@ import React, { ReactElement, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   fetchAllSamples,
-  isLoadingSelector,
+  isSamplesLoadingSelector,
   sampleListSelector,
 } from "../store/sampleListSlice";
 import { RootState } from "../store/store";
-import Sample from "./Sample";
+import DraggableSample from "./SoundFileBlock";
 import { Spinner } from "./Spinner";
 
 export const SampleListContainer = (): ReactElement => {
@@ -16,7 +16,7 @@ export const SampleListContainer = (): ReactElement => {
     sampleListSelector(state)
   );
   const isLoading = useAppSelector((state: RootState) =>
-    isLoadingSelector(state)
+    isSamplesLoadingSelector(state)
   );
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const SampleListContainer = (): ReactElement => {
     <>
       {isLoading && <Spinner />}
       {sampleList.map((props) => (
-        <Sample key={props.id} {...props} />
+        <DraggableSample key={props.id} {...props} />
       ))}
     </>
   );

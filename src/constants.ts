@@ -15,8 +15,21 @@ export const API = {
 
 export enum FEATURE_NAMES {
   EDITOR = "editor",
-  SAMLE_LIST = "sampleList",
+  SAMPLE_LIST = "sampleList",
+  TRACK_LIST = "trackList",
 }
+
+export const FEATURE = {
+  [FEATURE_NAMES.EDITOR]: {
+    FETCH_DATA_URL: "/get-current-track",
+  },
+  [FEATURE_NAMES.SAMPLE_LIST]: {
+    FETCH_DATA_URL: "/sample-list",
+  },
+  [FEATURE_NAMES.TRACK_LIST]: {
+    FETCH_DATA_URL: "/track-list",
+  },
+};
 
 export const EDITOR_HOVER_COLOR = "blanchedalmond";
 export const EDITOR_SAMPLE_COLORS = [

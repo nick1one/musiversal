@@ -19,9 +19,12 @@ const StyledSample = styled.div`
   &:hover {
     background-color: #f7f0ee;
   }
+  & > svg {
+    margin-left: 16px;
+  }
 `;
 
-const Sample = (props: SampleListItem): ReactElement => {
+export const SoundFileBlock = (props: SampleListItem): ReactElement => {
   const { path, name, duration, id, ...otherProps } = props;
 
   return (
@@ -32,4 +35,4 @@ const Sample = (props: SampleListItem): ReactElement => {
   );
 };
 
-export default draggableSampleHoc(Sample);
+export default draggableSampleHoc(SoundFileBlock);

@@ -3,7 +3,11 @@ import express, { Application, Request, Response } from "express";
 import path from "path";
 import { CONFIG, PORT_NUMBER, UI_APP_URL, URL } from "./constants";
 import { scanFolder } from "./helpers";
-import { SoundfileWithMetadata, SoundType } from "./types";
+import {
+  SoundfileWithMetadata,
+  FEATURE_NAME,
+  TrackWithMetadata,
+} from "./types";
 
 const app: Application = express();
 
@@ -21,13 +25,16 @@ app.use(
 );
 
 app.get(CONFIG.SAMPLE.FETCH_URL, async (req: Request, res: Response) => {
-  const samples: SoundfileWithMetadata[] = await scanFolder(SoundType.SAMPLE);
-  res.json({ samples });
+  const samples: SoundfileWithMetadata[] = await scanFolder(
+    FEATURE_NAME.SAMPLE
+  );
+  res.json(samples);
   // console.log(util.inspect(samples, { showHidden: false, depth: null }));
 });
 
 app.get(CONFIG.TRACK.FETCH_URL, async (req: Request, res: Response) => {
-  res.json({ tracks: await scanFolder(SoundType.TRACK) });
+  const tracks: TrackWithMetadata[] = await scanFolder(FEATURE_NAME.TRACK);
+  res.json(tracks);
 });
 
 app.post(URL.SAVE, async (req: Request, res: Response) => {});

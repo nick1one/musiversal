@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import path from "path";
 import { promisify } from "util";
 import { API_URL, CONFIG, PORT_NUMBER } from "./constants";
-import { SoundfileWithMetadata, SoundType } from "./types";
+import { SoundfileWithMetadata, FEATURE_NAME } from "./types";
 
 const readdir = promisify(fs.readdir);
 const getName = (fullName: string): string => fullName.split(".")[0];
@@ -12,7 +12,7 @@ const getName = (fullName: string): string => fullName.split(".")[0];
 const getMetaData = (
   soundFiles: string[],
   folder: string,
-  target: SoundType
+  target: FEATURE_NAME
 ): Promise<SoundfileWithMetadata[]> =>
   Promise.all(
     soundFiles.map(async (filename) => {
@@ -21,6 +21,7 @@ const getMetaData = (
         id: nanoid(),
         name: getName(filename),
         path: `${API_URL}:${PORT_NUMBER}${CONFIG[target].SERVE_URL}/${filename}`,
+        ...(target === FEATURE_NAME.TRACK ? { isDraft: false } : {}),
       };
       try {
         const {
@@ -37,7 +38,7 @@ const getMetaData = (
     })
   );
 
-export const scanFolder = async (target: SoundType) => {
+export const scanFolder = async (target: FEATURE_NAME) => {
   const targetFolder = path.resolve(`./${CONFIG[target].FOLDER}`);
   return await getMetaData(await readdir(targetFolder), targetFolder, target);
 };

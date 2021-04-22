@@ -4,6 +4,8 @@ import {
   EDITOR_BLOCKS_NUM,
   EDITOR_LENGTH_SEC,
   EDITOR_SAMPLE_COLORS,
+  FEATURE,
+  FEATURE_NAMES,
 } from "./constants";
 
 interface GetOverlapIdsInputs {
@@ -37,12 +39,12 @@ export const countOverlappedIds = ({
 export const getRandomColor = () =>
   EDITOR_SAMPLE_COLORS[Math.ceil(Math.random() * 10) - 1];
 
-export const fetchSampleList = async () => {
+export const fetchFeatureData = async (featureName: FEATURE_NAMES) => {
   try {
-    const {
-      data: { samples },
-    } = await axios.get(API.BASE + API.GET_SAMPLES);
-    return samples;
+    const { data } = await axios.get(
+      API.BASE + FEATURE[featureName].FETCH_DATA_URL
+    );
+    return data;
   } catch (error) {
     console.error(error);
     return [];
