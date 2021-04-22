@@ -23,12 +23,22 @@ export const PlayButtonContainer = ({
   const [loadedPromise, setLoadedPromise] = useState(null);
   const [isLoading, setLoadingStatus] = useState(true);
   const [isPlaying, setPlayingStatus] = useState(false);
+  const cleaningCallback = () => {
+    setPlayingStatus(false);
+    setLoadingStatus(false);
+    if (!loadedPromise) return;
+    // @ts-ignore
+    loadedPromise.then(() => {
+      Aural.stop(id);
+    });
+  };
   useEffect(() => {
     setLoadedPromise(
       Aural.load(id, path).then(() => {
         setLoadingStatus(false);
       })
     );
+    return cleaningCallback;
   }, []);
 
   const onClickHandler = () => {

@@ -13,8 +13,10 @@ export const API = {
   GET_SAMPLES: "/sample-list",
 };
 
-export const EDITOR_FEATURE_NAME = "editor";
-export const SAMPLE_LIST_FEATURE_NAME = "sampleList";
+export enum FEATURE_NAMES {
+  EDITOR = "editor",
+  SAMLE_LIST = "sampleList",
+}
 
 export const EDITOR_HOVER_COLOR = "blanchedalmond";
 export const EDITOR_SAMPLE_COLORS = [

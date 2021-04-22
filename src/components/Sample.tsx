@@ -21,9 +21,11 @@ const StyledSample = styled.div`
   }
 `;
 
-const Sample = ({ path, name, duration, id }: SampleListItem): ReactElement => {
+const Sample = (props: SampleListItem): ReactElement => {
+  const { path, name, duration, id, ...otherProps } = props;
+
   return (
-    <StyledSample>
+    <StyledSample {...otherProps}>
       <PlayButtonContainer {...{ path, duration, id }} />
       {name}
     </StyledSample>

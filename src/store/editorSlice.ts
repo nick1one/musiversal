@@ -7,7 +7,7 @@ import {
 import {
   DEFAULT_TRACK_NAME,
   EDITOR_BLOCKS_NUM,
-  EDITOR_FEATURE_NAME,
+  FEATURE_NAMES,
   SAMPLE_DUMMY_DATA,
 } from "../constants";
 import { countOverlappedIds, getBlockSize, getRandomColor } from "../helpers";
@@ -51,7 +51,7 @@ const initialState: EditorState = {
 };
 
 export const editorSlice = createSlice({
-  name: EDITOR_FEATURE_NAME,
+  name: FEATURE_NAMES.EDITOR,
   initialState,
   reducers: {
     saveDndData: (state, { payload }: PayloadAction<SampleListItem>) => {
@@ -95,7 +95,7 @@ export const editorSlice = createSlice({
 });
 
 const selectSelf = (state: RootState): EditorState =>
-  state[EDITOR_FEATURE_NAME];
+  state[FEATURE_NAMES.EDITOR];
 
 const selectDndData = createSelector(selectSelf, ({ dndData }) => dndData);
 

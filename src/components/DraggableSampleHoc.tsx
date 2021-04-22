@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { useAppDispatch } from "../hooks";
 import { resetOverlap, saveDndData } from "../store/editorSlice";
 import { SampleListItem } from "../store/sampleListSlice";
@@ -11,8 +11,8 @@ export interface DraggableSample extends SampleListItem {
 }
 
 export const draggableSampleHoc = (
-  SampleComponent: React.FunctionComponent<any>
-) => (props: any) => {
+  SampleComponent: React.FunctionComponent<DraggableSample>
+) => (props: SampleListItem): ReactElement => {
   const dispatch = useAppDispatch();
   return (
     <SampleComponent

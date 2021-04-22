@@ -5,7 +5,7 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { SAMPLE_LIST_FEATURE_NAME } from "../constants";
+import { FEATURE_NAMES } from "../constants";
 import { fetchSampleList } from "../helpers";
 import { RootState } from "./store";
 
@@ -32,7 +32,7 @@ export const fetchAllSamples = createAsyncThunk<SampleListItem[]>(
 );
 
 export const sampleListSlice = createSlice({
-  name: SAMPLE_LIST_FEATURE_NAME,
+  name: FEATURE_NAMES.SAMLE_LIST,
   initialState,
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<SampleListState>) => {
@@ -53,7 +53,7 @@ export const sampleListSlice = createSlice({
 });
 
 const selectSelf = (state: RootState): SampleListState =>
-  state[SAMPLE_LIST_FEATURE_NAME];
+  state[FEATURE_NAMES.SAMLE_LIST];
 
 export const sampleListSelector = createSelector(
   selectSelf,
