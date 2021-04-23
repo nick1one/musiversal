@@ -9,7 +9,7 @@ const StyledSample = styled(StyledEditorBlock)`
   align-items: flex-end;
   border-color: #f3f4f6;
   /* stylelint-disable */
-  background-color: ${({ sample: { color } }: EditorBlock) => color};
+  background-color: ${({ color }) => color};
   /* stylelint-enable */
   border-radius: 8px;
   cursor: pointer;
@@ -33,7 +33,11 @@ const StyledSample = styled(StyledEditorBlock)`
 `;
 
 export const SampleBlock = (props: EditorBlock): ReactElement => (
-  <StyledSample {...props} data-tip={props.sample?.name}>
+  <StyledSample
+    {...props}
+    data-tip={props.sample?.name}
+    color={props.sample?.color}
+  >
     <span>{props.sample?.name}</span>
     <ReactTooltip />
   </StyledSample>

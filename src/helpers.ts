@@ -1,12 +1,13 @@
 import axios from "axios";
 import {
-  API,
+  API_URL,
   EDITOR_BLOCKS_NUM,
   EDITOR_LENGTH_SEC,
   EDITOR_SAMPLE_COLORS,
   FEATURE,
   FEATURE_NAMES,
 } from "./constants";
+import { SaveTrackPayload } from "./store/editorSlice";
 
 interface GetOverlapIdsInputs {
   id: string;
@@ -42,7 +43,7 @@ export const getRandomColor = () =>
 export const fetchFeatureData = async (featureName: FEATURE_NAMES) => {
   try {
     const { data } = await axios.get(
-      API.BASE + FEATURE[featureName].FETCH_DATA_URL
+      API_URL.BASE + FEATURE[featureName].FETCH_DATA_URL
     );
     return data;
   } catch (error) {
@@ -51,5 +52,17 @@ export const fetchFeatureData = async (featureName: FEATURE_NAMES) => {
   }
 };
 
+export const sendTrackData = async (trackConfig: SaveTrackPayload) => {
+  try {
+    return await axios.post(API_URL.BASE + API_URL.SAVE_TRACK, trackConfig);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};
+
+export const getNameExtension = (url: string): string | undefined =>
+  url.split("/").pop();

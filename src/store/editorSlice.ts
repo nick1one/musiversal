@@ -1,29 +1,30 @@
 import {
+  ActionReducerMapBuilder,
+  createAsyncThunk,
   createSelector,
   createSlice,
   nanoid,
   PayloadAction,
 } from "@reduxjs/toolkit";
+import { EDITOR_BLOCKS_NUM, FEATURE_NAMES } from "../constants";
 import {
-  DEFAULT_TRACK_NAME,
-  EDITOR_BLOCKS_NUM,
-  FEATURE_NAMES,
-  SAMPLE_DUMMY_DATA,
-} from "../constants";
-import { countOverlappedIds, getBlockSize, getRandomColor } from "../helpers";
+  countOverlappedIds,
+  getBlockSize,
+  getNameExtension,
+  getRandomColor,
+  sendTrackData,
+} from "../helpers";
 import { SampleListItem } from "./sampleListSlice";
 import { RootState } from "./store";
 
-export interface SampleData {
-  name: string;
-  duration: number;
+export interface SampleData extends SampleListItem {
   color?: string;
 }
 
 export interface EditorBlock {
   id: string;
   size: number;
-  sample: SampleData;
+  sample?: SampleData;
 }
 
 interface DndData {
@@ -35,25 +36,38 @@ interface EditorState {
   editorBlocks: EditorBlock[];
   dndData: DndData;
   currentTrackName: string;
+  isLoading: boolean;
 }
 
 const initialState: EditorState = {
   editorBlocks: Array.from({ length: EDITOR_BLOCKS_NUM }, () => ({
     id: nanoid(),
     size: 1,
-    sample: SAMPLE_DUMMY_DATA,
   })),
   dndData: {
     overlappedIds: [],
     sampleToInsert: null,
   },
-  currentTrackName: DEFAULT_TRACK_NAME,
+  currentTrackName: "",
+  isLoading: false,
 };
+
+export interface SaveTrackPayload {
+  editorBlocks: Array<string | null | undefined>;
+  currentTrackName: string;
+}
+export const saveTrack = createAsyncThunk(
+  "saveTrack",
+  async (editorState: SaveTrackPayload) => await sendTrackData(editorState)
+);
 
 export const editorSlice = createSlice({
   name: FEATURE_NAMES.EDITOR,
   initialState,
   reducers: {
+    setTrackName: (state, { payload }: PayloadAction<string>) => {
+      state.currentTrackName = payload;
+    },
     saveDndData: (state, { payload }: PayloadAction<SampleListItem>) => {
       state.dndData.sampleToInsert = payload;
     },
@@ -90,7 +104,18 @@ export const editorSlice = createSlice({
         blockIds: state.editorBlocks.map(({ id }) => id),
       });
     },
-    // saveCurrentTrack: (state, action) => {},
+  },
+  extraReducers: (builder: ActionReducerMapBuilder<EditorState>) => {
+    builder.addCase(saveTrack.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(saveTrack.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      state.isLoading = false;
+    });
+    builder.addCase(saveTrack.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 
@@ -109,6 +134,11 @@ export const currentTrackSelector = createSelector(
   ({ currentTrackName }) => currentTrackName
 );
 
+export const isLoadingEditor = createSelector(
+  selectSelf,
+  ({ isLoading }) => isLoading
+);
+
 export const dndSampleSelector = createSelector(
   selectDndData,
   ({ sampleToInsert }) => sampleToInsert
@@ -119,11 +149,20 @@ export const overlapIdsSelector = createSelector(
   ({ overlappedIds }) => overlappedIds
 );
 
+export const editorExportDataSelector = createSelector(
+  editorBlocksSelector,
+  (editorBlocks) =>
+    editorBlocks.map((value) =>
+      value.sample ? getNameExtension(value.sample.path) : null
+    )
+);
+
 export const {
   drawOverlap,
   resetOverlap,
   insertSample,
   saveDndData,
+  setTrackName,
 } = editorSlice.actions;
 
 export default editorSlice.reducer;

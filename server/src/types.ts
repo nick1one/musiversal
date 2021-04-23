@@ -13,3 +13,5 @@ export enum FEATURE_NAME {
   TRACK = "TRACK",
   SAMPLE = "SAMPLE",
 }
+
+export const SUPPORTED_EXTENSIONS = ["mp3", "wav"];

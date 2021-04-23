@@ -10,7 +10,7 @@ export const EditorBlockContainer = ({ ...props }: EditorBlock) => {
     overlapIdsSelector(state)
   );
 
-  return props.sample.name ? (
+  return props.sample ? (
     <SampleBlock {...props} />
   ) : (
     <Block {...{ isHovered: overlappedIds.includes(props.id), ...props }} />

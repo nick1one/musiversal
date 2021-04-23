@@ -8,9 +8,9 @@ export const NO_TRACKS_MESSAGE = "You didn’t save any tracks, yet.";
 export const EDITOR_LENGTH_SEC = 90;
 export const EDITOR_BLOCKS_NUM = 30;
 
-export const API = {
+export const API_URL = {
   BASE: "http://localhost:3001",
-  GET_SAMPLES: "/sample-list",
+  SAVE_TRACK: "/save-track",
 };
 
 export enum FEATURE_NAMES {
@@ -44,5 +44,3 @@ export const EDITOR_SAMPLE_COLORS = [
   "#20639b",
   "#689e7c",
 ];
-
-export const SAMPLE_DUMMY_DATA = { name: "", duration: 0, color: "" };

@@ -45,6 +45,9 @@ export const tracksSlice = createSlice({
         state.isLoading = false;
       }
     );
+    builder.addCase(fetchAllTracks.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 
