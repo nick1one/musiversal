@@ -1,8 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../hooks";
-import { overlapIdsSelector } from "../store/editorSlice";
+import { EditorBlock, overlapIdsSelector } from "../store/editorSlice";
 import { RootState } from "../store/store";
-import { EditorBlock } from "../types";
 import Block from "./EmptyBlock";
 import { SampleBlock } from "./SampleBlock";
 
@@ -11,7 +10,7 @@ export const EditorBlockContainer = ({ ...props }: EditorBlock) => {
     overlapIdsSelector(state)
   );
 
-  return props.sample.sampleName ? (
+  return props.sample ? (
     <SampleBlock {...props} />
   ) : (
     <Block {...{ isHovered: overlappedIds.includes(props.id), ...props }} />

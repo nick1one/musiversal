@@ -1,6 +1,10 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { drawOverlap, getDndSample, insertSample } from "../store/editorSlice";
+import {
+  drawOverlap,
+  dndSampleSelector,
+  insertSample,
+} from "../store/editorSlice";
 import { RootState } from "../store/store";
 import { EditorBlockProps } from "./EmptyBlock";
 
@@ -16,7 +20,7 @@ export default (BlockComponent: React.FunctionComponent<EditorBlockProps>) => (
 ) => {
   const dispatch = useAppDispatch();
   const sampleToInsert = useAppSelector((state: RootState) =>
-    getDndSample(state)
+    dndSampleSelector(state)
   );
 
   const { id } = props;

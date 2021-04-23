@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
 import { EDITOR_HOVER_COLOR } from "../constants";
-import { EditorBlock } from "../types";
+import { EditorBlock } from "../store/editorSlice";
 import droppableBlockHoc, { EventCallback } from "./DroppableBlockHoc";
 
 export const StyledEditorBlock = styled.div`
