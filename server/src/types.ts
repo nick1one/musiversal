@@ -5,9 +5,7 @@ export interface SoundfileWithMetadata {
   duration: number;
 }
 
-export interface TrackWithMetadata extends SoundfileWithMetadata {
-  isDraft?: boolean;
-}
+export type TrackWithMetadata = SoundfileWithMetadata;
 
 export enum FEATURE_NAME {
   TRACK = "TRACK",

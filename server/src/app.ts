@@ -1,7 +1,14 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
+import helmet from "helmet";
 import path from "path";
-import { CONFIG, PORT_NUMBER, UI_APP_URL, URL } from "./constants";
+import {
+  CONFIG,
+  DRAFT_FILENAME,
+  PORT_NUMBER,
+  UI_APP_URL,
+  URL,
+} from "./constants";
 import { mergeTrack, prepareMergeData, scanFolder } from "./helpers";
 import {
   SoundfileWithMetadata,
@@ -17,6 +24,7 @@ const options: cors.CorsOptions = {
   origin: [UI_APP_URL],
 };
 app.use(cors(options));
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(
   CONFIG.SAMPLE.SERVE_URL,
@@ -40,12 +48,15 @@ app.get(CONFIG.TRACK.FETCH_URL, async (req: Request, res: Response) => {
 });
 
 app.post(URL.SAVE, async (req: Request, res: Response) => {
-  const { currentTrackName, editorBlocks } = req.body;
+  const { currentTrackName, editorBlocks, isDraft } = req.body;
   const mergeInputData = prepareMergeData(editorBlocks);
   try {
-    const newTrackName = await mergeTrack(mergeInputData, currentTrackName);
-    console.log(newTrackName);
-    res.json({ mergedTrack: newTrackName });
+    const newTrackName = await mergeTrack(
+      mergeInputData,
+      isDraft ? DRAFT_FILENAME : currentTrackName
+    );
+    console.log(`${newTrackName} was created/rewrited`);
+    res.json(newTrackName);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

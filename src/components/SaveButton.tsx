@@ -63,6 +63,10 @@ const StyledButton = styled.button`
   &:hover {
     background-color: #de6139;
     color: #fff;
+    &[disabled] {
+      background: #e5e7eb;
+      color: #6d737c;
+    }
   }
   &:active {
     transform: scale(0.9, 0.9);

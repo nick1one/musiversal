@@ -45,5 +45,5 @@ const Title = styled.h2`
 
 const Wrapper = styled.div`
   max-width: 380px;
-  padding: 25px 14px;
+  padding: 40px 25px 14px;
 `;

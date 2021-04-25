@@ -10,9 +10,7 @@ import { fetchFeatureData } from "../helpers";
 import { SampleListItem } from "./sampleListSlice";
 import { RootState } from "./store";
 
-export interface TrackListItem extends SampleListItem {
-  isDraft: boolean;
-}
+export type TrackListItem = SampleListItem;
 
 interface TracksState {
   tracks: TrackListItem[];

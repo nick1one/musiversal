@@ -37,6 +37,8 @@ interface EditorState {
   dndData: DndData;
   currentTrackName: string;
   isLoading: boolean;
+  draftIsReady: boolean;
+  activePlayerId: string;
 }
 
 const initialState: EditorState = {
@@ -48,16 +50,24 @@ const initialState: EditorState = {
     overlappedIds: [],
     sampleToInsert: null,
   },
+  activePlayerId: "",
   currentTrackName: "",
+  draftIsReady: false,
   isLoading: false,
 };
 
 export interface SaveTrackPayload {
   editorBlocks: Array<string | null | undefined>;
   currentTrackName: string;
+  isDraft?: boolean;
 }
 export const saveTrack = createAsyncThunk(
   "saveTrack",
+  async (editorState: SaveTrackPayload) => await sendTrackData(editorState)
+);
+
+export const saveDraft = createAsyncThunk(
+  "saveDraft",
   async (editorState: SaveTrackPayload) => await sendTrackData(editorState)
 );
 
@@ -65,6 +75,9 @@ export const editorSlice = createSlice({
   name: FEATURE_NAMES.EDITOR,
   initialState,
   reducers: {
+    setActivePlayerId: (state, { payload }: PayloadAction<string>) => {
+      state.activePlayerId = payload;
+    },
     setTrackName: (state, { payload }: PayloadAction<string>) => {
       state.currentTrackName = payload;
     },
@@ -109,12 +122,20 @@ export const editorSlice = createSlice({
     builder.addCase(saveTrack.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(saveTrack.fulfilled, (state, { payload }) => {
-      console.log(payload);
+    builder.addCase(saveTrack.fulfilled, (state) => {
       state.isLoading = false;
     });
     builder.addCase(saveTrack.rejected, (state) => {
       state.isLoading = false;
+    });
+    builder.addCase(saveDraft.rejected, (state) => {
+      state.draftIsReady = false;
+    });
+    builder.addCase(saveDraft.pending, (state) => {
+      state.draftIsReady = false;
+    });
+    builder.addCase(saveDraft.fulfilled, (state) => {
+      state.draftIsReady = true;
     });
   },
 });
@@ -138,6 +159,15 @@ export const isLoadingEditor = createSelector(
   selectSelf,
   ({ isLoading }) => isLoading
 );
+export const isDraftReadySelector = createSelector(
+  selectSelf,
+  ({ draftIsReady }) => draftIsReady
+);
+
+export const activePlayerIdSelector = createSelector(
+  selectSelf,
+  ({ activePlayerId }) => activePlayerId
+);
 
 export const dndSampleSelector = createSelector(
   selectDndData,
@@ -158,6 +188,7 @@ export const editorExportDataSelector = createSelector(
 );
 
 export const {
+  setActivePlayerId,
   drawOverlap,
   resetOverlap,
   insertSample,

@@ -7,6 +7,7 @@ import {
   API_URL,
   CONFIG,
   DATA_FOLDER,
+  DRAFT_FILENAME,
   PORT_NUMBER,
   SILENCE_FILE,
 } from "./constants";
@@ -30,16 +31,19 @@ const getMetaData = (
 ): Promise<SoundfileWithMetadata[]> =>
   Promise.all(
     soundFiles
-      .filter((filename) =>
-        SUPPORTED_EXTENSIONS.includes(getExtension(filename).toLowerCase())
-      )
+      .filter((filename) => {
+        const isDraftFile = filename === `${DRAFT_FILENAME}.mp3`;
+        const isFormatSupported = SUPPORTED_EXTENSIONS.includes(
+          getExtension(filename).toLowerCase()
+        );
+        return !isDraftFile && isFormatSupported;
+      })
       .map(async (filename) => {
         const filePath = path.join(folder, filename);
         const outputData = {
           id: nanoid(),
           name: getName(filename),
           path: `${API_URL}:${PORT_NUMBER}${CONFIG[target].SERVE_URL}/${filename}`,
-          ...(target === FEATURE_NAME.TRACK ? { isDraft: false } : {}),
         };
         try {
           const {

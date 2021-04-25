@@ -11,6 +11,7 @@ export const EDITOR_BLOCKS_NUM = 30;
 export const API_URL = {
   BASE: "http://localhost:3001",
   SAVE_TRACK: "/save-track",
+  SERVE_TRACKS: "/tracks",
 };
 
 export enum FEATURE_NAMES {
@@ -18,6 +19,9 @@ export enum FEATURE_NAMES {
   SAMPLE_LIST = "sampleList",
   TRACK_LIST = "trackList",
 }
+
+export const DRAFT_AUDIO_PLAYER_ID = "draft";
+export const DRAFT_URL = `${API_URL.BASE}${API_URL.SERVE_TRACKS}/${DRAFT_AUDIO_PLAYER_ID}.mp3`;
 
 export const FEATURE = {
   [FEATURE_NAMES.EDITOR]: {

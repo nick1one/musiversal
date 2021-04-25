@@ -1,6 +1,11 @@
 import Aural from "aural";
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../hooks";
+import { DRAFT_AUDIO_PLAYER_ID } from "../constants";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import {
+  activePlayerIdSelector,
+  setActivePlayerId,
+} from "../store/editorSlice";
 import { sampleListSelector } from "../store/sampleListSlice";
 import { RootState } from "../store/store";
 import { trackListSelector } from "../store/tracksSlice";
@@ -18,21 +23,25 @@ export const PlayButtonContainer = ({
   duration,
   id,
 }: AudioPlayerProps) => {
+  const dispatch = useAppDispatch();
   const sampleList = useAppSelector((state: RootState) =>
     sampleListSelector(state)
   );
   const tracks = useAppSelector((state: RootState) => trackListSelector(state));
+  const currentPlayingId = useAppSelector((state: RootState) =>
+    activePlayerIdSelector(state)
+  );
+  const isPlaying = id === currentPlayingId;
   const [loadedPromise, setLoadedPromise] = useState(null);
-  const [isLoading, setLoadingStatus] = useState(true);
-  const [isPlaying, setPlayingStatus] = useState(false);
+  const [isLoading, setLoadingStatus] = useState(!!path);
 
   const stopAllPLayers = () => {
     sampleList.map(({ id }) => Aural.stop(id));
     tracks.map(({ id }) => Aural.stop(id));
+    Aural.stop(DRAFT_AUDIO_PLAYER_ID);
   };
 
   const cleaningCallback = () => {
-    setPlayingStatus(false);
     setLoadingStatus(false);
     if (!loadedPromise) return;
     // @ts-ignore
@@ -42,38 +51,38 @@ export const PlayButtonContainer = ({
   };
 
   useEffect(() => {
+    if (!path) return;
     setLoadedPromise(
       Aural.load(id, path).then(() => {
         setLoadingStatus(false);
       })
     );
     return cleaningCallback;
-  }, []);
+  }, [path]);
 
   const onClickHandler = () => {
     if (!loadedPromise) return;
     // @ts-ignore
     loadedPromise.then(() => {
       if (isPlaying) {
+        dispatch(setActivePlayerId(""));
         Aural.stop(id);
-        setPlayingStatus(false);
         return;
       }
       stopAllPLayers();
-      setPlayingStatus(true);
+      dispatch(setActivePlayerId(id));
       Aural.play(id);
       setTimeout(() => {
-        setPlayingStatus(false);
+        dispatch(setActivePlayerId(""));
       }, duration * SEC);
     });
   };
 
   const playButtonProps = {
-    path,
-    id,
     onClickHandler,
     isLoading,
     isPlaying,
+    isDisabled: !path,
   };
   return <PlayButton {...playButtonProps} />;
 };

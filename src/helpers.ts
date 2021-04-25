@@ -54,10 +54,14 @@ export const fetchFeatureData = async (featureName: FEATURE_NAMES) => {
 
 export const sendTrackData = async (trackConfig: SaveTrackPayload) => {
   try {
-    return await axios.post(API_URL.BASE + API_URL.SAVE_TRACK, trackConfig);
+    const { data } = await axios.post(
+      API_URL.BASE + API_URL.SAVE_TRACK,
+      trackConfig
+    );
+    return data;
   } catch (error) {
     console.error(error);
-    return [];
+    return "";
   }
 };
 

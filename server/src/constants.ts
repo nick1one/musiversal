@@ -11,6 +11,8 @@ export const URL = {
   SAVE: "/save-track",
 };
 
+export const DRAFT_FILENAME = "draft";
+
 export const CONFIG = {
   [FEATURE_NAME.SAMPLE]: {
     FETCH_URL: "/sample-list",

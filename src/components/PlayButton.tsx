@@ -8,7 +8,11 @@ const StyledButton = styled.button`
   margin: 12px;
   background: none;
   cursor: pointer;
-  &:hover {
+  :disabled {
+    opacity: 0.5;
+  }
+  &.isPlaying,
+  &:hover:enabled {
     circle {
       fill: #de6139;
     }
@@ -18,7 +22,7 @@ const StyledButton = styled.button`
       stroke: #fff;
     }
   }
-  &:active {
+  &:active:enabled {
     svg {
       transform: scale(0.9, 0.9);
     }
@@ -29,9 +33,11 @@ interface PlayButtonProps {
   onClickHandler?: any;
   isPlaying?: boolean;
   isLoading?: boolean;
+  isDisabled: boolean;
 }
 
 export const PlayButton = ({
+  isDisabled = false,
   isLoading = false,
   isPlaying = false,
   onClickHandler = () => {
@@ -41,7 +47,11 @@ export const PlayButton = ({
   return isLoading ? (
     <Spinner size={40} />
   ) : (
-    <StyledButton onClick={onClickHandler}>
+    <StyledButton
+      disabled={isDisabled}
+      onClick={onClickHandler}
+      className={isPlaying ? "isPlaying" : ""}
+    >
       <svg
         width="32"
         height="32"
