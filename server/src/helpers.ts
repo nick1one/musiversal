@@ -16,9 +16,8 @@ import {
   FEATURE_NAME,
   SUPPORTED_EXTENSIONS,
 } from "./types";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const audioconcat = require("audioconcat");
 import { safename } from "safename";
+import ffmpeg from "fluent-ffmpeg";
 
 const readdir = promisify(fs.readdir);
 const getName = (fullName: string): string => fullName.split(".")[0];
@@ -67,17 +66,18 @@ export const scanFolder = async (target: FEATURE_NAME) => {
 
 export const mergeTrack = (mp3Arr: string[], newName: string) => {
   const resultFileName = getTrackName(newName);
-  const result = new Promise((resolve, reject) => {
-    audioconcat(mp3Arr)
-      .concat(path.join(CONFIG[FEATURE_NAME.TRACK].FOLDER, resultFileName))
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input("concat:" + mp3Arr.join("|"))
+      .outputOptions("-acodec mp3")
+      .on("end", function () {
+        resolve(resultFileName);
+      })
       .on("error", function (err: Error) {
         reject(err);
       })
-      .on("end", function () {
-        resolve(resultFileName);
-      });
+      .save(path.join(CONFIG[FEATURE_NAME.TRACK].FOLDER, resultFileName));
   });
-  return result;
 };
 
 type MergeInput = string | null;

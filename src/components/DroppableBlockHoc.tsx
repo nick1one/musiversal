@@ -4,8 +4,6 @@ import {
   drawOverlap,
   dndSampleSelector,
   insertSample,
-  editorExportDataSelector,
-  saveDraft,
 } from "../store/editorSlice";
 import { RootState } from "../store/store";
 import { EditorBlockProps } from "./EmptyBlock";
@@ -24,9 +22,6 @@ export default (BlockComponent: React.FunctionComponent<EditorBlockProps>) => (
   const sampleToInsert = useAppSelector((state: RootState) =>
     dndSampleSelector(state)
   );
-  const exportData = useAppSelector((state: RootState) =>
-    editorExportDataSelector(state)
-  );
 
   const { id } = props;
   return (
@@ -34,13 +29,6 @@ export default (BlockComponent: React.FunctionComponent<EditorBlockProps>) => (
       onDrop={() => {
         if (!sampleToInsert) return;
         dispatch(insertSample());
-        dispatch(
-          saveDraft({
-            editorBlocks: exportData,
-            currentTrackName: "",
-            isDraft: true,
-          })
-        );
       }}
       onDragOver={onDragOverHandler}
       onDragEnter={(e: React.DragEvent<HTMLDivElement>) => {
