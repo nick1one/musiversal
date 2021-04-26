@@ -15,6 +15,8 @@ This is mandatory requirement must be installed first.
 You can download static builds of ffmpeg from [here](https://johnvansickle.com/ffmpeg/). If you are lucky to use brew on MacOS, just run:
 ### `brew install ffmpeg`
 
+Please, install dependencies before using.
+### `npm i`
 
 ## Available Scripts
 
