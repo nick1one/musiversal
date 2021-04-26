@@ -1,14 +1,12 @@
 import Aural from "aural";
 import React, { useEffect, useState } from "react";
-import { DRAFT_AUDIO_PLAYER_ID } from "../constants";
+import { stopAuralPlayers } from "../helpers";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import {
   activePlayerIdSelector,
   setActivePlayerId,
 } from "../store/editorSlice";
-import { sampleListSelector } from "../store/sampleListSlice";
 import { RootState } from "../store/store";
-import { trackListSelector } from "../store/tracksSlice";
 import { PlayButton } from "./PlayButton";
 
 interface AudioPlayerProps {
@@ -24,22 +22,12 @@ export const PlayButtonContainer = ({
   id,
 }: AudioPlayerProps) => {
   const dispatch = useAppDispatch();
-  const sampleList = useAppSelector((state: RootState) =>
-    sampleListSelector(state)
-  );
-  const tracks = useAppSelector((state: RootState) => trackListSelector(state));
   const currentPlayingId = useAppSelector((state: RootState) =>
     activePlayerIdSelector(state)
   );
   const isPlaying = id === currentPlayingId;
   const [loadedPromise, setLoadedPromise] = useState(null);
   const [isLoading, setLoadingStatus] = useState(!!path);
-
-  const stopAllPLayers = () => {
-    sampleList.map(({ id }) => Aural.stop(id));
-    tracks.map(({ id }) => Aural.stop(id));
-    Aural.stop(DRAFT_AUDIO_PLAYER_ID);
-  };
 
   const cleaningCallback = () => {
     setLoadingStatus(false);
@@ -69,7 +57,7 @@ export const PlayButtonContainer = ({
         Aural.stop(id);
         return;
       }
-      stopAllPLayers();
+      stopAuralPlayers();
       dispatch(setActivePlayerId(id));
       Aural.play(id);
       setTimeout(() => {

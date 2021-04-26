@@ -1,3 +1,4 @@
+import Aural from "aural";
 import axios from "axios";
 import {
   API_URL,
@@ -70,3 +71,13 @@ export const noop = () => {};
 
 export const getNameExtension = (url: string): string | undefined =>
   url.split("/").pop();
+
+export const stopAuralPlayers = () => {
+  if (!Aural?.s) return;
+  for (const key in Aural.s) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (Aural.s.hasOwnProperty(key)) {
+      Aural.s[key].stop();
+    }
+  }
+};

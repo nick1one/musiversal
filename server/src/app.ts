@@ -58,7 +58,6 @@ app.post(URL.SAVE, async (req: Request, res: Response) => {
     console.log(`${newTrackName} was created/rewrited`);
     res.json(newTrackName);
   } catch (err) {
-    console.log(err);
     res.sendStatus(500);
   }
 });
