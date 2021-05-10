@@ -1,8 +1,6 @@
 
 
-# musiversal
-test task for musiversal.com
-
+# audio editor
 Creates simple API serving samples, tracks, and merging samples into one track.
 Run server with UI.
 
